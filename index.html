@@ -24,12 +24,22 @@
             margin: 2rem auto;
             padding: 0 1rem;
         }
-        .intro {
+        .intro, .compteur-box {
             background: white;
             padding: 1.5rem;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             margin-bottom: 2rem;
+        }
+        .compteur-box {
+            text-align: center;
+            border-left: 5px solid #388e3c;
+        }
+        .compteur-nombre {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2e7d32;
+            margin: 0.5rem 0;
         }
         table {
             width: 100%;
@@ -65,6 +75,12 @@
     </header>
 
     <main>
+        <section class="compteur-box">
+            <h2>Total des déchets alimentaires cumulés</h2>
+            <div class="compteur-nombre" id="total-dechets">Chargement...</div>
+            <p>Mise à jour en direct depuis le tableau des collèges</p>
+        </section>
+
         <section class="intro">
             <h2>Notre démarche ODD (Objectif 12)</h2>
             <p>Chaque jour, nous trions nos déchets à la fin du repas. Voici les résultats de nos pesées et comptages pour réduire notre empreinte environnementale.</p>
@@ -115,5 +131,36 @@
         <p>Projet Éco-Collège 2026 - En lien avec les Objectifs de Développement Durable de l'ONU</p>
     </footer>
 
+    <script>
+        // TRÈS IMPORTANT : Remplace cette URL par ton lien de publication CSV Google Sheets obtenu à l'étape 1
+        const urlGoogleSheet = "TON_LIEN_PUBLIE_AU_FORMAT_CSV_ICI";
+
+        async function chargerDonnées() {
+            try {
+                const response = await fetch(urlGoogleSheet);
+                const data = await response.text();
+                
+                // Découpe le CSV en lignes et en colonnes
+                const lignes = data.split('\n');
+                
+                // EXEMPLE : Si ta somme totale se trouve sur la 7ème ligne, 2ème colonne (Cellule B7) :
+                // En informatique on commence à compter à 0, donc ligne 6, colonne 1.
+                const ligneSomme = lignes[6].split(',');
+                const totalSomme = ligneSomme[1]; // Récupère la valeur
+
+                // Affiche la somme dans le site HTML
+                document.getElementById('total-dechets').innerText = totalSomme.trim() + " kg";
+                
+            } catch (error) {
+                console.error("Erreur de récupération des données :", error);
+                document.getElementById('total-dechets').innerText = "Erreur de connexion";
+            }
+        }
+
+        // Lance la fonction au chargement de la page
+        chargerDonnées();
+    </script>
+
 </body>
 </html>
+Étape 3 : Ajustement et mise en lign
